@@ -1,5 +1,6 @@
 package com.alicorp.demo_alicorp.controller;
 
+import com.alicorp.demo_alicorp.dto.request.CambiarEstadoRequest;
 import com.alicorp.demo_alicorp.dto.request.RegistrarOperacionRequest;
 import com.alicorp.demo_alicorp.dto.response.Response;
 import com.alicorp.demo_alicorp.entity.Estado;
@@ -42,7 +43,7 @@ public class OperacionController {
 
     @GetMapping("/operaciones")
     public ResponseEntity<Response<List<Operacion>>> ListarOperaciones(
-            @RequestParam Estado estado) {
+            @RequestParam(required = false) Estado estado) {
         Response<List<Operacion>> response = service.ListarOperaciones(estado);
 
         if (response.getSuccess()) {
@@ -56,8 +57,8 @@ public class OperacionController {
         }
     }
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<Response<Boolean>> actualizarEstado(@RequestParam Estado estado, @PathVariable Long id) {
-        Response<Boolean> response = service.ActualizarEstado(id,estado);
+    public ResponseEntity<Response<Boolean>> actualizarEstado(@RequestBody CambiarEstadoRequest req, @PathVariable Long id) {
+        Response<Boolean> response = service.ActualizarEstado(id,req.getEstado());
         if (response.getSuccess()) {
             return ResponseEntity
                     .status(HttpStatus.ACCEPTED)

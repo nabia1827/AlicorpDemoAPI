@@ -22,11 +22,20 @@ public class OperacionService {
     }
 
     public Response<List<Operacion>> ListarOperaciones(Estado estado) {
-        Response<List<Operacion>> response = new Response<List<Operacion>>();
-        List<Operacion> operaciones = operacionRepository.findByEstado(estado);
+        Response<List<Operacion>> response = new Response<>();
+
+        List<Operacion> operaciones;
+
+        if (estado != null) {
+            operaciones = operacionRepository.findByEstado(estado);
+        } else {
+            operaciones = operacionRepository.findAll();
+        }
+
         response.setSuccess(true);
         response.setData(operaciones);
         response.setMessage("Operaciones encontradas");
+
         return response;
     }
 
@@ -40,7 +49,7 @@ public class OperacionService {
             return response;
         }
 
-        if(req.getTipo_cambio()>0 && req.getMonto_origen()>0){
+        if(req.getTipo_cambio()<0 && req.getMonto_origen()<0){
             response.setMessage("El tipo de cambio y el monto de origen deben ser mayores a cero");
             return response;
         }
